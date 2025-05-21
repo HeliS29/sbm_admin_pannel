@@ -1,7 +1,8 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, boolean, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// User schema definition
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   full_name: text("full_name").notNull(),
@@ -18,6 +19,7 @@ export const users = pgTable("users", {
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
+// Schema for user insertion
 export const insertUserSchema = createInsertSchema(users).pick({
   full_name: true,
   email: true,
@@ -28,12 +30,13 @@ export const insertUserSchema = createInsertSchema(users).pick({
   phone: true,
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-
+// Login schema
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
 
-export type LoginCredentials = z.infer<typeof loginSchema>;
+// These would be types in TypeScript, but in JavaScript we'll just document them with comments
+// InsertUser - Object matching the insertUserSchema
+// User - Object matching the users table structure
+// LoginCredentials - Object with email and password fields
