@@ -1,0 +1,152 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from openai import BaseModel
+from pydantic import EmailStr
+from sqlalchemy.orm import Session
+from typing import Any
+
+from app.database import SessionLocal, get_db
+
+from app.models import AdminLogin
+from app.schemas.admin import AdminLoginResponse, AdminLoginUpdate,AdminLoginCreate
+from passlib.context import CryptContext
+import jwt
+from datetime import datetime, timedelta
+router = APIRouter()
+
+# Dependency to get DB session
+@router.post("/admin", response_model=AdminLoginResponse, status_code=status.HTTP_201_CREATED)
+def create_admin_profile(admin_data: AdminLoginCreate, db: Session = Depends(get_db)) -> Any:
+    # Check if username or email already exists
+    if db.query(AdminLogin).filter((AdminLogin.email == admin_data.email) | (AdminLogin.username == admin_data.username)).first():
+        raise HTTPException(status_code=400, detail="Email or Username already exists")
+    
+    new_admin = AdminLogin(**admin_data.dict())
+    db.add(new_admin)
+    db.commit()
+    db.refresh(new_admin)
+    return new_admin
+
+@router.get("/admin/{admin_id}", response_model=AdminLoginResponse)
+def get_admin_profile(admin_id: int, db: Session = Depends(get_db)) -> Any:
+    admin = db.query(AdminLogin).filter(AdminLogin.id == admin_id).first()
+    if not admin:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Admin not found")
+    return admin
+
+@router.put("/admin/{admin_id}", response_model=AdminLoginResponse)
+def update_admin_profile(admin_id: int, admin_update: AdminLoginUpdate, db: Session = Depends(get_db)) -> Any:
+    admin = db.query(AdminLogin).filter(AdminLogin.id == admin_id).first()
+    if not admin:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Admin not found")
+    
+    update_data = admin_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(admin, key, value)
+    
+    db.commit()
+    db.refresh(admin)
+    return admin
+
+
+SECRET_KEY = "your_secret_key_here"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
+# SQLAlchemy setup
+
+
+# Create tables
+
+
+# Password hasher
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+
+# Pydantic schemas
+class RegisterSchema(BaseModel):
+    full_name: str
+    email: EmailStr
+    username: str
+    password: str
+    organization: str = None
+    designation: str = None
+    phone: str = None
+
+class LoginSchema(BaseModel):
+    email: EmailStr
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+# Dependency to get DB session
+
+
+# Hash password
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
+# Verify password
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+# Create access token
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+# Register API
+@router.post("/register", response_model=Token)
+def register(user: RegisterSchema, db: Session = Depends(get_db)):
+    # Check if email or username exists
+    if db.query(AdminLogin).filter(AdminLogin.email == user.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
+    if db.query(AdminLogin).filter(AdminLogin.username == user.username).first():
+        raise HTTPException(status_code=400, detail="Username already registered")
+
+    hashed_password = hash_password(user.password)
+
+    new_user = AdminLogin(
+        full_name=user.full_name,
+        email=user.email,
+        username=user.username,
+        password=hashed_password,
+        organization=user.organization,
+        designation=user.designation,
+        phone=user.phone,
+        is_active=True,
+        is_superadmin=False,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    # Create JWT token
+    access_token = create_access_token(data={"sub": new_user.email})
+
+    return {"access_token": access_token, "token_type": "bearer"}
+
+# Login API
+@router.post("/login", response_model=Token)
+def login(credentials: LoginSchema, db: Session = Depends(get_db)):
+    user = db.query(AdminLogin).filter(AdminLogin.email == credentials.email).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+
+    if not verify_password(credentials.password, user.password):
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+
+    # Update last_login
+    user.last_login = datetime.utcnow()
+    db.commit()
+
+    access_token = create_access_token(data={"sub": user.email})
+    return {"access_token": access_token, "token_type": "bearer"}
