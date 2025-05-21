@@ -1,0 +1,119 @@
+import React, { useEffect, useState } from "react";
+
+const TWILIO_NUMBER = "whatsapp:+14155238886"; // Replace with your actual Twilio number
+
+const ChatPanel = () => {
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [chatHistory, setChatHistory] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/chat/api/whatsapp/users")
+      .then((res) => res.json())
+      .then((data) => setUsers(data.user_numbers || []));
+  }, []);
+
+  useEffect(() => {
+    if (selectedUser) {
+      fetch(
+        `http://localhost:8000/chat/api/whatsapp/history?user_number=${encodeURIComponent(
+          selectedUser
+        )}`
+      )
+        .then((res) => res.json())
+        .then((data) => setChatHistory(data.chat_history || []));
+    }
+  }, [selectedUser]);
+
+  return (
+    <div className="flex h-screen bg-gray-100 font-sans">
+      {/* Sidebar */}
+      <div className="w-1/4 bg-white shadow-md border-r border-gray-200 p-4 overflow-y-auto">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Conversations</h2>
+        <div className="space-y-2">
+          {users.map((user, index) => (
+            <div
+              key={index}
+              className={`p-3 rounded-lg cursor-pointer transition-all ${
+                selectedUser === user
+                  ? "bg-blue-500 text-white shadow"
+                  : "hover:bg-blue-100 text-gray-700"
+              }`}
+              onClick={() => setSelectedUser(user)}
+            >
+              <span className="font-medium">{user.replace("whatsapp:", "")}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Chat Area */}
+      <div className="flex-1 flex flex-col p-6 overflow-y-auto relative">
+        {!selectedUser ? (
+          <div className="text-gray-500 text-center m-auto text-xl">
+            Select a conversation to start
+          </div>
+        ) : (
+          <>
+            <div className="sticky top-0 bg-gray-100 pb-4 mb-4 border-b border-gray-300">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Chat with {selectedUser.replace("whatsapp:", "")}
+              </h2>
+            </div>
+
+            <div className="flex flex-col space-y-4">
+              {chatHistory.map((msg, index) => {
+                const isOutgoing = msg.from === TWILIO_NUMBER;
+
+                return (
+                  <div
+                    key={index}
+                    className={`max-w-xl px-4 py-3 rounded-2xl shadow-sm ${
+                      isOutgoing
+                        ? "bg-blue-600 text-white self-end ml-auto"
+                        : "bg-white text-gray-800 border self-start"
+                    }`}
+                    style={{ wordBreak: "break-word" }}
+                  >
+                    {/* Text Body */}
+                    {msg.body && <div className="text-base">{msg.body}</div>}
+
+                    {/* Media Section */}
+                    {msg.media?.map((mediaItem, i) =>
+                      mediaItem.content_type.startsWith("image/") ? (
+                        <img
+                          key={i}
+                          src={mediaItem.url}
+                          alt="Media"
+                          className="mt-3 rounded-md border max-w-xs"
+                        />
+                      ) : (
+                        <a
+                          key={i}
+                          href={mediaItem.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 block underline text-sm text-blue-200"
+                        >
+                          View file ({mediaItem.content_type})
+                        </a>
+                      )
+                    )}
+
+                    {/* Timestamp */}
+                    <div className="text-xs text-gray-300 mt-2 text-right">
+                      {new Date(msg.date_sent).toLocaleString()}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ChatPanel;
+

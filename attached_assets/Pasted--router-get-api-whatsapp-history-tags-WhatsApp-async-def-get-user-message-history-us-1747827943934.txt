@@ -1,0 +1,65 @@
+@router.get("/api/whatsapp/history", tags=["WhatsApp"])
+async def get_user_message_history(
+    user_number: str = Query(..., description="Format: whatsapp:+1234567890 or +1234567890")
+):
+    if not user_number.startswith("whatsapp:"):
+        user_number = f"whatsapp:{user_number}"
+
+    url = f"https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}/Messages.json"
+    chat_history = []
+
+    async with httpx.AsyncClient(auth=(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)) as client:
+        response = await client.get(url, params={"PageSize": 1000})
+        if response.status_code != 200:
+            return {"error": "Failed to fetch messages from Twilio"}
+
+        messages = response.json().get("messages", [])
+        
+        for msg in messages:
+            if (
+                (msg["from"] == TWILIO_PHONE_NUMBER and msg["to"] == user_number) or
+                (msg["to"] == TWILIO_PHONE_NUMBER and msg["from"] == user_number)
+            ):
+                history_item = {
+                    "from": msg["from"],
+                    "to": msg["to"],
+                    "body": msg["body"],
+                    "date_sent": msg["date_sent"],
+                    "media": []
+                }
+
+                if int(msg.get("num_media", 0)) > 0:
+                    media_url = f"https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}/Messages/{msg['sid']}/Media.json"
+                    media_resp = await client.get(media_url)
+                    if media_resp.status_code == 200:
+                        media_list = media_resp.json().get("media_list", media_resp.json().get("media", []))
+                        for media_item in media_list:
+                            media_sid = media_item["sid"]
+                            content_type = media_item["content_type"]
+                            media_file_url = f"https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}/Messages/{msg['sid']}/Media/{media_sid}"
+
+                            # Get public CDN URL by following redirect
+                            async with httpx.AsyncClient(follow_redirects=True) as redirect_client:
+                                file_resp = await redirect_client.get(media_file_url, auth=(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN))
+                                if file_resp.status_code == 200:
+                                    public_url = str(file_resp.url)
+                                    history_item["media"].append({
+                                        "url": public_url,
+                                        "content_type": content_type
+                                    })
+                                else:
+                                    history_item["media"].append({
+                                        "url": media_file_url,  # fallback
+                                        "content_type": content_type,
+                                        "error": "Restricted or expired"
+                                    })
+
+                chat_history.append(history_item)
+
+    chat_history.sort(key=lambda x: x["date_sent"])
+
+    return {
+        "twilio_number": TWILIO_PHONE_NUMBER,
+        "user_number": user_number,
+        "chat_history": chat_history
+    }
