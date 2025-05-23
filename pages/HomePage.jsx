@@ -1,3 +1,8 @@
+import React from 'react';
+import Sidebar from '../components/Sidebar';
+import StatsCard from '../components/StatsCard';
+import ActivityItem from '../components/ActivityItem';
+
 function HomePage() {
   const [stats, setStats] = React.useState({
     totalUsers: 0,
@@ -135,3 +140,4 @@ function HomePage() {
     </div>
   );
 }
+export default HomePage;

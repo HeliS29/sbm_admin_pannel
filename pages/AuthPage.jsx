@@ -1,3 +1,6 @@
+import React from 'react';
+import { AuthContext } from '../components/context/AuthContext';
+
 function AuthPage() {
   const [currentView, setCurrentView] = React.useState("login");
   const [loginError, setLoginError] = React.useState("");
@@ -251,33 +254,43 @@ function AuthPage() {
         </div>
         
         {/* Hero Section */}
-        <div className="hidden lg:block lg:w-1/2 bg-gradient-to-r from-indigo-500 to-blue-600 p-12 text-white">
-          <div className="h-full flex flex-col justify-center">
-            <h1 className="text-4xl font-bold mb-6">WhatsApp Admin Dashboard</h1>
-            <p className="text-lg mb-8">
-              Manage all your WhatsApp business conversations, track customer interactions, and analyze messaging patterns in one place.
-            </p>
-            <ul className="space-y-4">
-              <li className="flex items-center">
-                <i className="fas fa-check-circle text-indigo-200 mr-2"></i>
-                <span>Access all your WhatsApp conversations</span>
-              </li>
-              <li className="flex items-center">
-                <i className="fas fa-check-circle text-indigo-200 mr-2"></i>
-                <span>View detailed message history with media</span>
-              </li>
-              <li className="flex items-center">
-                <i className="fas fa-check-circle text-indigo-200 mr-2"></i>
-                <span>Track customer engagement metrics</span>
-              </li>
-              <li className="flex items-center">
-                <i className="fas fa-check-circle text-indigo-200 mr-2"></i>
-                <span>Manage your team and permissions</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <div className="hidden lg:block lg:w-1/2 bg-white p-12 text-gray-800">
+  <div className="h-full flex flex-col justify-center items-start space-y-6">
+   
+    <h1 className="text-4xl font-bold text-blue-600">Your WhatsApp Admin Hub</h1>
+    <p className="text-lg text-gray-700">
+      Seamlessly manage conversations, track engagement, and empower your support team — all from a single dashboard.
+    </p>
+    <ul className="space-y-3">
+      <li className="flex items-center">
+        <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+        Access and manage all customer chats in real time
+      </li>
+      <li className="flex items-center">
+        <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+        Track detailed message and media history
+      </li>
+      <li className="flex items-center">
+        <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+        Analyze customer interactions and metrics
+      </li>
+      <li className="flex items-center">
+        <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+        Assign roles, permissions, and manage team
+      </li>
+    </ul>
+  </div>
+</div>
       </div>
     </div>
   );
 }
+export default AuthPage;

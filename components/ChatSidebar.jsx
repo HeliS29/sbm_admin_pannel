@@ -1,3 +1,4 @@
+import React from 'react';
 function ChatSidebar({ onSelectUser, selectedUser }) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [users, setUsers] = React.useState([]);
@@ -76,3 +77,4 @@ function ChatSidebar({ onSelectUser, selectedUser }) {
     </div>
   );
 }
+export default ChatSidebar;

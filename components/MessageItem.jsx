@@ -1,3 +1,4 @@
+import React from 'react';
 function MessageItem({ message, twilioNumber }) {
   const isOutgoing = message.from === twilioNumber;
   
@@ -47,3 +48,4 @@ function MessageItem({ message, twilioNumber }) {
     </div>
   );
 }
+export default MessageItem;

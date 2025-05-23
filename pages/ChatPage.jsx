@@ -1,3 +1,10 @@
+
+import React from 'react';
+import Sidebar from '../components/Sidebar';
+import ChatSidebar from '../components/ChatSidebar';
+import ChatArea from '../components/ChatArea';
+
+
 function ChatPage() {
   const [selectedUser, setSelectedUser] = React.useState(null);
 
@@ -22,3 +29,4 @@ function ChatPage() {
     </div>
   );
 }
+export default ChatPage;

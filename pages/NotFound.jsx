@@ -1,3 +1,5 @@
+import React from 'react';
+
 function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -15,3 +17,5 @@ function NotFound() {
     </div>
   );
 }
+
+export default NotFound;

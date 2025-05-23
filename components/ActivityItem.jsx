@@ -1,3 +1,4 @@
+import React from 'react';
 function ActivityItem({ activity }) {
   const { user, action, content, timestamp } = activity;
   
@@ -31,3 +32,4 @@ function ActivityItem({ activity }) {
     </div>
   );
 }
+export default ActivityItem;

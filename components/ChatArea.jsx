@@ -1,3 +1,5 @@
+import React from 'react';
+import MessageItem from './MessageItem';
 function ChatArea({ selectedUser }) {
   const [chatHistory, setChatHistory] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -7,8 +9,7 @@ function ChatArea({ selectedUser }) {
   
   // Fetch chat history when user is selected
   React.useEffect(() => {
-    if (!selectedUser) return;
-    
+    if (!selectedUser) return;    
     setIsLoading(true);
     
     fetch(`http://localhost:8000/chat/api/whatsapp/history?user_number=${encodeURIComponent(selectedUser)}`)
@@ -103,27 +104,34 @@ function ChatArea({ selectedUser }) {
       </div>
       
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
-        {isLoading ? (
-          <div className="flex justify-center py-10">
-            <i className="fas fa-spinner fa-spin text-primary text-2xl"></i>
-          </div>
-        ) : chatHistory.length > 0 ? (
-          <>
-            {chatHistory.map((msg, index) => (
-              <MessageItem key={index} message={msg} twilioNumber={twilioNumber} />
-            ))}
-            <div ref={messagesEndRef} />
-          </>
-        ) : (
-          <div className="text-center py-10 text-gray-500">
-            No messages yet
-          </div>
-        )}
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50 relative">
+  {isLoading && (
+    <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+      <div className="text-center">
+        <i className="fas fa-spinner fa-spin text-blue-600 text-3xl mb-2"></i>
+        <p className="text-gray-700">Loading conversation...</p>
       </div>
+    </div>
+  )}
+
+  {!isLoading && chatHistory.length > 0 && (
+    <>
+      {chatHistory.map((msg, index) => (
+        <MessageItem key={index} message={msg} twilioNumber={twilioNumber} />
+      ))}
+      <div ref={messagesEndRef} />
+    </>
+  )}
+
+  {!isLoading && chatHistory.length === 0 && (
+    <div className="text-center py-10 text-gray-500">
+      No messages yet
+    </div>
+  )}
+</div>
       
       {/* Message Input */}
-      <form onSubmit={handleSendMessage} className="bg-white px-4 py-3 border-t border-gray-200">
+      {/* <form onSubmit={handleSendMessage} className="bg-white px-4 py-3 border-t border-gray-200">
         <div className="flex items-center">
           <button type="button" className="text-gray-500 hover:text-gray-700 p-2">
             <i className="fas fa-paperclip"></i>
@@ -143,7 +151,8 @@ function ChatArea({ selectedUser }) {
             <i className="fas fa-paper-plane"></i>
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
   );
 }
+export default ChatArea;

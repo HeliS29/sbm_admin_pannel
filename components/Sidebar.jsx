@@ -1,3 +1,5 @@
+import React from 'react';
+import { AuthContext } from '../components/context/AuthContext';
 function Sidebar() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -84,3 +86,4 @@ function Sidebar() {
     </div>
   );
 }
+export default Sidebar;

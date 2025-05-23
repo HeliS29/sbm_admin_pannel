@@ -1,3 +1,4 @@
+import React from 'react';
 function StatsCard({ icon, title, value, color }) {
   const colorClasses = {
     primary: "bg-indigo-100 text-primary",
@@ -19,3 +20,4 @@ function StatsCard({ icon, title, value, color }) {
     </div>
   );
 }
+export default StatsCard;

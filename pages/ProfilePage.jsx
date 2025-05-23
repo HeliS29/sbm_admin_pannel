@@ -1,5 +1,9 @@
+import React from 'react';
+import { AuthContext } from '../components/context/AuthContext';
+import Sidebar from '../components/Sidebar';
+
 function ProfilePage() {
-  const { user, updateProfile } = React.useContext(AuthContext);
+  const { user } = React.useContext(AuthContext);
   const [formState, setFormState] = React.useState({
     full_name: "",
     email: "",
@@ -15,22 +19,56 @@ function ProfilePage() {
 
   // Initialize form with user data
   React.useEffect(() => {
-    if (user) {
-      setFormState({
-        full_name: user.full_name || "",
-        email: user.email || "",
-        username: user.username || "",
-        organization: user.organization || "",
-        designation: user.designation || "",
-        phone: user.phone || "",
-        password: ""
-      });
+    async function fetchProfile() {
+      if (!user?.id) return; // Wait until user is available
+
+      try {
+        const res = await fetch(`http://localhost:8000/admin/admin/${user.id}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!res.ok) throw new Error('Failed to fetch profile');
+
+        const data = await res.json();
+
+        setFormState({
+          full_name: data.full_name || '',
+          email: data.email || '',
+          username: data.username || '',
+          organization: data.organization || '',
+          designation: data.designation || '',
+          phone: data.phone || '',
+          password: ''  // Never prefill password
+        });
+
+        setUpdateError(null);
+      } catch (err) {
+        setUpdateError(err.message);
+      }
     }
-  }, [user]);
+
+    fetchProfile();
+  }, [user?.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormState(prev => ({ ...prev, [name]: value }));
+  };
+
+  const updateProfile = async (adminId, updates) => {
+    const res = await fetch(`http://localhost:8000/admin/admin/${adminId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Failed to update profile");
+    }
+
+    return await res.json();
   };
 
   const handleSubmit = (e) => {
@@ -38,14 +76,19 @@ function ProfilePage() {
     setUpdateSuccess(false);
     setUpdateError("");
     setIsSubmitting(true);
-    
+
     const updates = { ...formState };
-    // Only include password if it's not empty
     if (!updates.password) {
       delete updates.password;
     }
-    
-    updateProfile(updates)
+
+    if (!user?.id) {
+      setUpdateError("Admin ID not found");
+      setIsSubmitting(false);
+      return;
+    }
+
+    updateProfile(user.id, updates)
       .then(() => {
         setUpdateSuccess(true);
         setFormState(prev => ({ ...prev, password: "" }));
@@ -60,54 +103,48 @@ function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content Area */}
       <div className="flex-1 overflow-auto">
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-6">My Profile</h2>
-          
+
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="p-6 sm:p-10 bg-gradient-to-r from-indigo-500 to-blue-600 text-white">
               <div className="flex flex-col sm:flex-row items-center">
-                <div className="mb-4 sm:mb-0 sm:mr-6">
-                  <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-indigo-600 text-4xl">
-                    <i className="fas fa-user"></i>
-                  </div>
-                </div>
+                <div className="mb-4 sm:mb-0 sm:mr-6"></div>
                 <div className="text-center sm:text-left">
-                  <h3 className="text-2xl font-bold">{user?.full_name}</h3>
-                  <p className="text-blue-100">{user?.designation || "No designation"}</p>
+                  <h3 className="text-2xl font-bold">{formState?.full_name}</h3>
+                  <p className="text-blue-100">{formState?.designation || "No designation"}</p>
                   <div className="flex items-center justify-center sm:justify-start mt-2 space-x-2">
                     <span className="flex items-center text-sm">
                       <i className="fas fa-envelope mr-1"></i>
-                      <span>{user?.email}</span>
+                      <span>{formState?.email}</span>
                     </span>
-                    {user?.phone && (
+                    {formState?.phone && (
                       <span className="flex items-center text-sm">
                         <i className="fas fa-phone mr-1"></i>
-                        <span>{user?.phone}</span>
+                        <span>{formState?.phone}</span>
                       </span>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="p-6 sm:p-10">
               {updateSuccess && (
                 <div className="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                   <span>Profile updated successfully!</span>
                 </div>
               )}
-              
+
               {updateError && (
                 <div className="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                   <span>{updateError}</span>
                 </div>
               )}
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -182,20 +219,7 @@ function ProfilePage() {
                     />
                   </div>
                 </div>
-                
-                <div className="border-t border-gray-200 pt-6">
-                  <label htmlFor="profile-password" className="block text-sm font-medium text-gray-700 mb-1">Change Password</label>
-                  <input 
-                    type="password" 
-                    id="profile-password" 
-                    name="password" 
-                    value={formState.password}
-                    onChange={handleChange}
-                    placeholder="Leave blank to keep current password" 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary"
-                  />
-                </div>
-                
+
                 <div className="flex justify-end">
                   <button 
                     type="submit" 
@@ -218,3 +242,5 @@ function ProfilePage() {
     </div>
   );
 }
+
+export default ProfilePage;
