@@ -14,7 +14,7 @@ function ChatPage() {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 h-screen flex flex-col md:flex-row">
+      <div className="flex-1 h-screen flex flex-col md:flex-row w-[calc(100%-18rem)] ml-[18rem]">
         {/* Chat Sidebar */}
         <ChatSidebar 
           onSelectUser={setSelectedUser} 

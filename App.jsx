@@ -1,50 +1,44 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
-import HomePage from './pages/HomePage';
+// import HomePage from './pages/HomePage';
+import Assistant from './pages/Assistant';
 import ChatPage from './pages/ChatPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFound from './pages/NotFound';
 import { AuthContext } from './components/context/AuthContext';
-
-
+import CallLogs from './components/CallLogs';
+import VapiCall from './pages/VapiCall';
+import PhoneNumber from './pages/PhoneNumber';
 
 function App() {
-  const authContextValue = React.useContext(AuthContext); // just consume context
+  const authContextValue = React.useContext(AuthContext);
 
   return (
     <AuthContext.Provider value={authContextValue}>
       <Router>
-        <Switch>
-          <Route path="/auth" component={AuthPage} />
-          <ProtectedRoute exact path="/" component={HomePage} />
-          <ProtectedRoute path="/chat" component={ChatPage} />
-          <ProtectedRoute path="/profile" component={ProfilePage} />
-          <Route component={NotFound} />
-        </Switch>
+        <Routes>
+          <Route path="/auth" element={<AuthPage />} />
+          {/* <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} /> */}
+          <Route path="/call_logs" element={<ProtectedRoute><CallLogs /></ProtectedRoute>} />
+          <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/assistants" element={<ProtectedRoute><Assistant /></ProtectedRoute>} />
+          <Route path="/vapi_call_logs" element={<ProtectedRoute><VapiCall /></ProtectedRoute>} />
+          <Route path="/phone_numbers" element={<ProtectedRoute><PhoneNumber /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </Router>
     </AuthContext.Provider>
   );
 }
 
-function ProtectedRoute({ component: Component, ...rest }) {
+function ProtectedRoute({ children }) {
   const { user, isLoading } = React.useContext(AuthContext);
 
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isLoading ? (
-          <div className="loading">Loading...</div>
-        ) : user ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/auth" />
-        )
-      }
-    />
-  );
+  if (isLoading) return <div className="loading">Loading...</div>;
+
+  return user ? children : <Navigate to="/auth" replace />;
 }
 
 export default App;

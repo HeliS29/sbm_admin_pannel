@@ -105,7 +105,7 @@ function ProfilePage() {
     <div className="min-h-screen flex flex-col md:flex-row">
       <Sidebar />
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto w-[calc(100%-18rem)] ml-[18rem]">
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-6">My Profile</h2>
 

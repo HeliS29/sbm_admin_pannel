@@ -16,7 +16,7 @@ const ChatPanel = () => {
   useEffect(() => {
     if (selectedUser) {
       fetch(
-        `http://localhost:8000/chat/api/whatsapp/history?user_number=${encodeURIComponent(
+        `http://localhost:8000/twilio/api/whatsapp/history?user_number=${encodeURIComponent(
           selectedUser
         )}`
       )
