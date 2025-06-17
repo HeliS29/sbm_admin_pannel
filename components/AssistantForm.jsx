@@ -215,6 +215,7 @@ import assistantApi from '../api/assistantApi';
 const VAPI_PROVIDERS = [
   { id: 'openai', label: 'OpenAI' },
   { id: 'google', label: 'Google' },
+  { id: 'anthropic', label: 'Anthropic' },
 ];
 
 const VAPI_MODELS = {
@@ -227,6 +228,11 @@ const VAPI_MODELS = {
     { id: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro' },
     { id: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
   ],
+  anthropic: [ // Added Anthropic models
+    { id: 'claude-3-opus', label: 'Claude 3 Opus' },
+    { id: 'claude-3-sonnet', label: 'Claude 3 Sonnet' },
+    { id: 'claude-3-haiku', label: 'Claude 3 Haiku' },
+  ],
 };
 
 const FIRST_MESSAGE_MODES = [
@@ -234,6 +240,7 @@ const FIRST_MESSAGE_MODES = [
   { id: 'waits-for-user', label: 'Assistant waits for user' },
   { id: 'assistant-speaks-with-model', label: 'Assistant speaks first with model generated message' },
 ];
+
 
 const AssistantForm = ({ onSubmit, initialData = {}, isEditMode = false }) => {
   const {
@@ -250,12 +257,30 @@ const AssistantForm = ({ onSubmit, initialData = {}, isEditMode = false }) => {
   const [voices, setVoices] = useState([]);
   const [loadingVoices, setLoadingVoices] = useState(false);
   const [voicesError, setVoicesError] = useState(null);
-
+  console.log("watch('voice_id')",watch('voice_id'))
   const selectedProvider = watch('provider');
-
   useEffect(() => {
-    reset(initialData);
-  }, [initialData, reset]);
+    const voiceId = watch('voice_id');
+  
+    // Auto-correct if short version used
+    if (voiceId && !voiceId.startsWith('azure/') && voices.length > 0) {
+      const fullId = voices.find(v => v.id.endsWith(voiceId));
+      if (fullId) {
+        setValue('voice_id', fullId.id);  // Fix selection
+      }
+    }
+  }, [voices, watch('voice_id')]);
+  useEffect(() => {
+    if (!loadingVoices && voices.length > 0 && initialData.voice_id) {
+      reset(initialData);
+    }
+  }, [initialData, reset, loadingVoices, voices]);
+  useEffect(() => {
+    const voiceId = watch('voice_id');
+    console.log('Selected voice_id:', voiceId);
+    console.log('Voice IDs available:', voices.map(v => v.id));
+    console.log('Matched in list:', voices.find(v => v.id === voiceId));
+  }, [voices, watch('voice_id')]);
 
   useEffect(() => {
     const fetchVoices = async () => {
@@ -321,6 +346,7 @@ const AssistantForm = ({ onSubmit, initialData = {}, isEditMode = false }) => {
             </select>
             {errors.provider && <p className="text-red-500 text-sm mt-1">{errors.provider.message}</p>}
           </div>
+          
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Model</label>
@@ -354,15 +380,16 @@ const AssistantForm = ({ onSubmit, initialData = {}, isEditMode = false }) => {
             >
               <option value="">{loadingVoices ? 'Loading voices...' : 'Select a Voice'}</option>
               {voices.map((voice) => (
-                <option key={voice.id} value={voice.id}>
+                <option className="" key={voice.id} value={voice.id}>
                   {voice.label}
                 </option>
               ))}
             </select>
+            
             {voicesError && <p className="text-red-500 text-sm mt-1">{voicesError}</p>}
             {errors.voice_id && <p className="text-red-500 text-sm mt-1">{errors.voice_id.message}</p>}
           </div>
-
+        
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">First Message Mode</label>
             <select
@@ -398,7 +425,7 @@ const AssistantForm = ({ onSubmit, initialData = {}, isEditMode = false }) => {
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">System Prompt</label>
           <textarea
-            className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white"
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 h-64 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white"
             placeholder="You are a helpful AI assistant."
             {...register('system_prompt', { required: 'System Prompt is required' })}
           />

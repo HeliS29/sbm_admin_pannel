@@ -321,8 +321,6 @@ const KnowledgeBaseSection = ({
                 <div className="flex flex-wrap justify-center gap-2 text-xs text-gray-400">
                   <span className="bg-gray-200 px-2 py-1 rounded">.txt</span>
                   <span className="bg-gray-200 px-2 py-1 rounded">.pdf</span>
-                  <span className="bg-gray-200 px-2 py-1 rounded">.doc</span>
-                  <span className="bg-gray-200 px-2 py-1 rounded">.docx</span>
                 </div>
               </>
             )}
