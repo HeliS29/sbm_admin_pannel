@@ -115,8 +115,8 @@ function ProfilePage() {
                 <div className="mb-4 sm:mb-0 sm:mr-6"></div>
                 <div className="text-center sm:text-left">
                   <h3 className="text-2xl font-bold">{formState?.full_name}</h3>
-                  <p className="text-blue-100">{formState?.designation || "No designation"}</p>
-                  <div className="flex items-center justify-center sm:justify-start mt-2 space-x-2">
+                  {/* <p className="text-blue-100">{formState?.designation || "No designation"}</p> */}
+                  {/* <div className="flex items-center justify-center sm:justify-start mt-2 space-x-2">
                     <span className="flex items-center text-sm">
                       <i className="fas fa-envelope mr-1"></i>
                       <span>{formState?.email}</span>
@@ -127,7 +127,7 @@ function ProfilePage() {
                         <span>{formState?.phone}</span>
                       </span>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

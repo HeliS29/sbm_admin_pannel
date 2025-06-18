@@ -10,6 +10,7 @@ import { AuthContext } from './components/context/AuthContext';
 import CallLogs from './components/CallLogs';
 import VapiCall from './pages/VapiCall';
 import PhoneNumber from './pages/PhoneNumber';
+import TagManager from './pages/TaxManager';
 
 function App() {
   const authContextValue = React.useContext(AuthContext);
@@ -26,6 +27,7 @@ function App() {
           <Route path="/assistants" element={<ProtectedRoute><Assistant /></ProtectedRoute>} />
           <Route path="/vapi_call_logs" element={<ProtectedRoute><VapiCall /></ProtectedRoute>} />
           <Route path="/phone_numbers" element={<ProtectedRoute><PhoneNumber /></ProtectedRoute>} />
+          <Route path="/tags" element={<ProtectedRoute><TagManager /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

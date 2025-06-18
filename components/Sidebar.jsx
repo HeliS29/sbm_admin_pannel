@@ -130,6 +130,7 @@ import {
   PhoneCall, 
   User, 
   LogOut,
+  Tags,
   Home
 } from 'lucide-react';
 
@@ -185,7 +186,7 @@ const Sidebar = () => {
           <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
             <Home className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
+          <h1 className="text-xl font-bold text-white">Dashboard</h1>
         </div>
         <button 
           className="md:hidden text-white hover:text-blue-100 transition-colors"
@@ -216,6 +217,7 @@ const Sidebar = () => {
             <NavLink href="/assistants" icon={Bot} label="Assistant" />
             <NavLink href="/vapi_call_logs" icon={PhoneCall} label="Call Logs" />
             <NavLink href="/phone_numbers" icon={Phone} label="Phone Numbers" />
+            <NavLink href="/tags" icon={Tags} label="Tags" />
             <NavLink href="/" icon={User} label="My Profile" />
 
             {/* Logout */}
