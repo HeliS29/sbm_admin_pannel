@@ -10,7 +10,7 @@
 
 //   const fetchTags = async () => {
 //     try {
-//       const res = await fetch('http://localhost:8000/vapi/tags');
+//       const res = await fetch('https://api.interactivv.pro//vapi/tags');
 //       const data = await res.json();
 //       setTags(data);
 //     } catch (err) {
@@ -26,7 +26,7 @@
 //     setSuccess('');
 
 //     try {
-//       const res = await fetch('http://localhost:8000/vapi/tags', {
+//       const res = await fetch('https://api.interactivv.pro//vapi/tags', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json'

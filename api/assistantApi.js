@@ -1,5 +1,5 @@
 // src/api/assistantApi.js
-const API_BASE_URL = 'http://localhost:8000/vapi'; // Replace with your backend URL (e.g., 'http://localhost:8000')
+const API_BASE_URL = 'https://api.interactivv.pro//vapi'; // Replace with your backend URL (e.g., 'https://api.interactivv.pro/')
 
 const handleResponse = async (response) => {
   if (!response.ok) {

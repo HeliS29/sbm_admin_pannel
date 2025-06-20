@@ -27,7 +27,7 @@ const WidgetGenerator = () => {
   const fetchAssistants = async () => {
     try {
       setIsLoadingAssistants(true);
-      const res = await fetch("http://localhost:8000/vapi/vapi/get-list-assistants");
+      const res = await fetch("https://api.interactivv.pro//vapi/vapi/get-list-assistants");
       const data = await res.json();
       setAssistants(Array.isArray(data) ? data : []);
       setError("");
@@ -46,7 +46,7 @@ const WidgetGenerator = () => {
       setIsLoading(true);
       setError("");
 
-      const res = await fetch("http://localhost:8000/vapi/get_widget_script", {
+      const res = await fetch("https://api.interactivv.pro//vapi/get_widget_script", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ assistant_id: selectedAssistant }),

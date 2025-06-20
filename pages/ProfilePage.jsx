@@ -23,7 +23,7 @@ function ProfilePage() {
       if (!user?.id) return; // Wait until user is available
 
       try {
-        const res = await fetch(`http://localhost:8000/admin/admin/${user.id}`, {
+        const res = await fetch(`https://api.interactivv.pro//admin/admin/${user.id}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -57,7 +57,7 @@ function ProfilePage() {
   };
 
   const updateProfile = async (adminId, updates) => {
-    const res = await fetch(`http://localhost:8000/admin/admin/${adminId}`, {
+    const res = await fetch(`https://api.interactivv.pro//admin/admin/${adminId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),

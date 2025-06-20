@@ -6,7 +6,7 @@
   
 //   React.useEffect(() => {
 //     // Fetch WhatsApp users from the API
-//     fetch("http://localhost:8000/chat/api/whatsapp/users")
+//     fetch("https://api.interactivv.pro//chat/api/whatsapp/users")
 //       .then(res => {
 //         if (!res.ok) {
 //           throw new Error("Failed to fetch WhatsApp users");
@@ -88,7 +88,7 @@ function ChatSidebar({ onSelectUser, selectedUser }) {
   const [isLoading, setIsLoading] = React.useState(true);
   
   React.useEffect(() => {
-    fetch("http://localhost:8000/twilio/api/whatsapp/users")
+    fetch("https://api.interactivv.pro//twilio/api/whatsapp/users")
       .then(res => {
         if (!res.ok) {
           throw new Error("Failed to fetch WhatsApp users");

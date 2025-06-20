@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem('token');
 
     if (token) {
-      fetch('http://localhost:8000/admin/me', {
+      fetch('https://api.interactivv.pro//admin/me', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     setAuthError(null);
     try {
-      const res = await fetch('http://localhost:8000/admin/login', {
+      const res = await fetch('https://api.interactivv.pro//admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
@@ -48,7 +48,7 @@ export function AuthProvider({ children }) {
 
       localStorage.setItem('token', data.access_token);
 
-      const userRes = await fetch('http://localhost:8000/admin/me', {
+      const userRes = await fetch('https://api.interactivv.pro//admin/me', {
         headers: { 'Authorization': `Bearer ${data.access_token}` }
       });
 
@@ -73,7 +73,7 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     setAuthError(null);
     try {
-      const res = await fetch('http://localhost:8000/admin/register', {
+      const res = await fetch('https://api.interactivv.pro//admin/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)
@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
 
       localStorage.setItem('token', data.access_token);
 
-      const userRes = await fetch('http://localhost:8000/admin/me', {
+      const userRes = await fetch('https://api.interactivv.pro//admin/me', {
         headers: { 'Authorization': `Bearer ${data.access_token}` }
       });
 

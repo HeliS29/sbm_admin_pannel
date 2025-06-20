@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000/vapi';
+const API_BASE_URL = 'https://api.interactivv.pro//vapi';
 
 const tagApi = {
   // Get all tags

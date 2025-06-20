@@ -38,7 +38,7 @@
 //   useEffect(() => {
 //     const fetchCalls = async () => {
 //       try {
-//         const response = await fetch("http://localhost:8000/vapi/calls/inbound");
+//         const response = await fetch("https://api.interactivv.pro//vapi/calls/inbound");
 //         if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
 //         const data = await response.json();
 //         setCalls(data.calls || []);
@@ -402,8 +402,8 @@ const VapiCall = () => {
       setLoading(true);
       try {
         const [inboundRes, outboundRes] = await Promise.all([
-          fetch("http://localhost:8000/vapi/calls/inbound"),
-          fetch("http://localhost:8000/vapi/calls/outbound"),
+          fetch("https://api.interactivv.pro//vapi/calls/inbound"),
+          fetch("https://api.interactivv.pro//vapi/calls/outbound"),
         ]);
 
         const inboundData = await inboundRes.json();
