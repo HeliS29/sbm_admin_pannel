@@ -1,125 +1,3 @@
-// import React from 'react';
-// import { AuthContext } from '../components/context/AuthContext';
-// function Sidebar() {
-//   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-//   const [isMobile, setIsMobile] = React.useState(false);
-//   const location = window.location.pathname;
-//   const { user, logout } = React.useContext(AuthContext);
-
-//   React.useEffect(() => {
-//     const checkMobileScreen = () => {
-//       setIsMobile(window.innerWidth < 768);
-//     };
-
-//     checkMobileScreen();
-//     window.addEventListener("resize", checkMobileScreen);
-//     return () => window.removeEventListener("resize", checkMobileScreen);
-//   }, []);
-
-//   const toggleMobileMenu = () => {
-//     setMobileMenuOpen(!mobileMenuOpen);
-//   };
-
-//   const handleLogout = () => {
-//     logout();
-//   };
-
-//   return (
-//     <div className="bg-gray-900 text-white w-full md:w-64 flex-shrink-0 h-auto md:h-screen">
-//       <div className="px-6 py-4 bg-gray-900 flex items-center justify-between md:justify-start">
-//         <h1 className="text-xl font-bold">Admin Dashboard</h1>
-//         <button 
-//           className="md:hidden text-gray-300 hover:text-white"
-//           onClick={toggleMobileMenu}
-//         >
-//           <i className="fas fa-bars"></i>
-//         </button>
-//       </div>
-      
-//       {(mobileMenuOpen || !isMobile) && (
-//         <div className="md:block px-6 py-4">
-//           {/* User Profile Section */}
-//           <div className="mb-6 flex items-center space-x-3">
-//             <div className="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-white">
-//               <i className="fas fa-user"></i>
-//             </div>
-//             <div>
-//               <p className="text-sm font-semibold">{user?.full_name}</p>
-//               <p className="text-xs text-gray-400">{user?.email}</p>
-//             </div>
-//           </div>
-          
-//           {/* Navigation */}
-//           <nav className="space-y-1">
-//             {/* <a 
-//               href="/"
-//               className={`py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors ${location === '/' ? 'bg-gray-800 text-white' : ''}`}
-//             >
-//               <i className="fas fa-tachometer-alt w-5"></i>
-//               <span>Dashboard</span>
-//             </a> */}
-//             <a 
-//               href="/chat"
-//               className={`py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors ${location === '/chat' ? 'bg-gray-800 text-white' : ''}`}
-//             >
-//               <i className="fab fa-whatsapp w-5"></i>
-//               <span>WhatsApp Chats</span>
-//             </a>
-//             {/* <a 
-//               href="/call_logs"
-//               className={`py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors ${location === '/chat' ? 'bg-gray-800 text-white' : ''}`}
-//             >
-//               <i className="fab fa-whatsapp w-5"></i>
-//               <span>Call Logs</span>
-//             </a> */}
-//              <a 
-//               href="/assistants"
-//               className={`py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors ${location === '/profile' ? 'bg-gray-800 text-white' : ''}`}
-//             >
-//               <i className="fas fa-user w-5"></i>
-//               <span>Assistant</span>
-//             </a>
-            
-//             <a 
-//               href="/vapi_call_logs"
-//               className={`py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors ${location === '/profile' ? 'bg-gray-800 text-white' : ''}`}
-//             >
-//               <i className="fas fa-user w-5"></i>
-//               <span>Call Logs</span>
-//             </a>
-//             <a 
-//               href="/phone_numbers"
-//               className={`py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors ${location === '/chat' ? 'bg-gray-800 text-white' : ''}`}
-//             >
-//               <i className="fab fa-whatsapp w-5"></i>
-//               <span>Phone Number</span>
-//             </a>
-//             <a 
-//               href="/"
-//               className={`py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors ${location === '/profile' ? 'bg-gray-800 text-white' : ''}`}
-//             >
-//               <i className="fas fa-user w-5"></i>
-//               <span>My Profile</span>
-//             </a>
-//             <a 
-//               href="#" 
-//               onClick={handleLogout}
-//               className="py-2 px-4 rounded text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3 transition-colors"
-//             >
-//               <i className="fas fa-sign-out-alt w-5"></i>
-//               <span>Logout</span>
-//             </a>
-//           </nav>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-// export default Sidebar;
-
-
-// Sidebar.jsx
-
 import React, { useState, useEffect } from 'react';
 import { 
   Menu, 
@@ -130,6 +8,7 @@ import {
   PhoneCall, 
   User, 
   LogOut,
+  Pencil,
   Tags,
   Home
 } from 'lucide-react';
@@ -142,6 +21,15 @@ const Sidebar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { user, logout } = React.useContext(AuthContext);
   const location = window.location.pathname;
+  const [formState, setFormState] = useState({
+      full_name: "",
+      email: "",
+      username: "",
+      organization: "",
+      designation: "",
+      phone: "",
+      password: ""
+    });
 
   useEffect(() => {
     const checkMobileScreen = () => {
@@ -151,6 +39,39 @@ const Sidebar = () => {
     window.addEventListener("resize", checkMobileScreen);
     return () => window.removeEventListener("resize", checkMobileScreen);
   }, []);
+  useEffect(() => {
+      async function fetchProfile() {
+        if (!user?.id) return; // Wait until user is available
+  
+        try {
+          const res = await fetch(`http://localhost:8000/admin/admin/${user.id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
+  
+          if (!res.ok) throw new Error('Failed to fetch profile');
+  
+          const data = await res.json();
+          console.log(data.full_name,"sidebar")
+          setFormState({
+            full_name: data.full_name,
+            email: data.email || '',
+            username: data.username || '',
+            organization: data.organization || '',
+            designation: data.designation || '',
+            phone: data.phone || '',
+            password: ''  // Never prefill password
+          });
+          console.log(formState,"formStateformState")
+  
+        } catch (err) {
+          setUpdateError(err.message);
+        }
+      }
+  
+      fetchProfile();
+    }, [user?.id]);
+  
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -205,8 +126,8 @@ const Sidebar = () => {
                 <User className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">{user?.full_name}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              <p className="text-sm font-semibold text-gray-900 truncate">{formState.full_name}</p>
+                {/* <p className="text-xs text-gray-500 truncate">{user?.email}</p> */}
               </div>
             </div>
           </div>
@@ -218,6 +139,7 @@ const Sidebar = () => {
             <NavLink href="/vapi_call_logs" icon={PhoneCall} label="Call Logs" />
             <NavLink href="/phone_numbers" icon={Phone} label="Phone Numbers" />
             <NavLink href="/tags" icon={Tags} label="Tags" />
+            <NavLink href="/widget" icon={Pencil} label="Widget" />
             <NavLink href="/" icon={User} label="My Profile" />
 
             {/* Logout */}
