@@ -25,7 +25,7 @@
 
 //   const fetchAssistants = async () => {
 //     try {
-//       const res = await fetch("https://api.interactivv.pro//vapi/vapi/get-list-assistants");
+//       const res = await fetch("http://localhost:8000/vapi/vapi/get-list-assistants");
 //       if (!res.ok) throw new Error("Failed to fetch assistants");
 //       const data = await res.json();
 //       setAssistants(Array.isArray(data) ? data : []);
@@ -36,7 +36,7 @@
 
 //   const fetchPhoneConfigs = async () => {
 //     try {
-//       const res = await fetch("https://api.interactivv.pro//vapi/phone_numbers_with_assistants");
+//       const res = await fetch("http://localhost:8000/vapi/phone_numbers_with_assistants");
 //       if (!res.ok) throw new Error("Failed to fetch phone configs");
 //       const data = await res.json();
 //       setPhoneConfigs(Array.isArray(data) ? data : []);
@@ -53,7 +53,7 @@
 //       const form = new FormData();
 //       form.append("id", id);
   
-//       const res = await fetch("https://api.interactivv.pro//vapi/delete_phone_number", {
+//       const res = await fetch("http://localhost:8000/vapi/delete_phone_number", {
 //         method: "POST",
 //         body: form,
 //       });
@@ -93,7 +93,7 @@
 //         form.append("id", formData.id);
 //         form.append("assistant_id", formData.assistant_id);
 
-//         const res = await fetch("https://api.interactivv.pro//vapi/update_phone_assistant", {
+//         const res = await fetch("http://localhost:8000/vapi/update_phone_assistant", {
 //           method: "POST",
 //           body: form,
 //         });
@@ -107,7 +107,7 @@
 //         form.append("auth_token", formData.auth_token);
 //         form.append("assistant_id", formData.assistant_id);
 
-//         const res = await fetch("https://api.interactivv.pro//vapi/add_phone_number", {
+//         const res = await fetch("http://localhost:8000/vapi/add_phone_number", {
 //           method: "POST",
 //           body: form,
 //         });
@@ -433,10 +433,18 @@ const PhoneNumber = () => {
     fetchAssistants();
     fetchPhoneConfigs();
   }, []);
-
+  const getAuthHeaders = (extraHeaders = {}) => {
+    const token = localStorage.getItem("token");
+    return {
+      Authorization: `Bearer ${token}`,
+      ...extraHeaders,
+    };
+  };
   const fetchAssistants = async () => {
     try {
-      const res = await fetch("https://api.interactivv.pro//vapi/vapi/get-list-assistants");
+      const res = await fetch("http://localhost:8000/vapi/vapi/get-list-assistants", {
+        headers: getAuthHeaders(),
+      });
       const data = await res.json();
       setAssistants(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -446,7 +454,9 @@ const PhoneNumber = () => {
 
   const fetchPhoneConfigs = async () => {
     try {
-      const res = await fetch("https://api.interactivv.pro//vapi/phone_numbers_with_assistants");
+      const res = await fetch("http://localhost:8000/vapi/phone_numbers_with_assistants", {
+        headers: getAuthHeaders(),
+      });
       const data = await res.json();
       setPhoneConfigs(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -460,8 +470,9 @@ const PhoneNumber = () => {
     try {
       const form = new FormData();
       form.append("id", id);
-      const res = await fetch("https://api.interactivv.pro//vapi/delete_phone_number", {
+      const res = await fetch("http://localhost:8000/vapi/delete_phone_number", {
         method: "POST",
+        headers: getAuthHeaders(),
         body: form,
       });
       const result = await res.json();
@@ -507,8 +518,9 @@ const PhoneNumber = () => {
       if (formData.id) {
         form.append("id", formData.id);
         form.append("assistant_id", formData.assistant_id);
-        const res = await fetch("https://api.interactivv.pro//vapi/update_phone_assistant", {
+        const res = await fetch("http://localhost:8000/vapi/update_phone_assistant", {
           method: "POST",
+          headers: getAuthHeaders(),
           body: form,
         });
         const result = await res.json();
@@ -519,8 +531,9 @@ const PhoneNumber = () => {
         form.append("account_sid", formData.account_sid);
         form.append("auth_token", formData.auth_token);
         form.append("assistant_id", formData.assistant_id);
-        const res = await fetch("https://api.interactivv.pro//vapi/add_phone_number", {
+        const res = await fetch("http://localhost:8000/vapi/add_phone_number", {
           method: "POST",
+          headers: getAuthHeaders(),
           body: form,
         });
         const result = await res.json();
@@ -549,7 +562,7 @@ const PhoneNumber = () => {
         customerNumber: outboundCallData.customerNumber,
         earliestAt,
       };
-      const res = await fetch("https://api.interactivv.pro//vapi/schedule_outbound_call", {
+      const res = await fetch("http://localhost:8000/vapi/schedule_outbound_call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

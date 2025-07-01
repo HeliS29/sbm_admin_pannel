@@ -12,7 +12,7 @@
 //     if (!selectedUser) return;    
 //     setIsLoading(true);
     
-//     fetch(`https://api.interactivv.pro//twilio/api/whatsapp/history?user_number=${encodeURIComponent(selectedUser)}`)
+//     fetch(`http://localhost:8000/twilio/api/whatsapp/history?user_number=${encodeURIComponent(selectedUser)}`)
 //       .then(res => {
 //         if (!res.ok) {
 //           throw new Error("Failed to fetch chat history");
@@ -173,7 +173,7 @@ function ChatArea({ selectedUser }) {
     if (!selectedUser) return;    
     setIsLoading(true);
     
-    fetch(`https://api.interactivv.pro//twilio/api/whatsapp/history?user_number=${encodeURIComponent(selectedUser)}`)
+    fetch(`http://localhost:8000/twilio/api/whatsapp/history?user_number=${encodeURIComponent(selectedUser)}`)
       .then(res => {
         if (!res.ok) {
           throw new Error("Failed to fetch chat history");

@@ -696,6 +696,7 @@ const Assistant = () => {
         first_message_mode: vapiDetails?.firstMessageMode || 'assistant-speaks-first',
         first_message: vapiDetails?.firstMessage || '',
         voice_id: vapiDetails?.voice?.voiceId || '',
+        voice_provider: vapiDetails?.voice?.provider || '',
         tool_ids: vapiDetails?.model?.toolIds || [],
         transcriber_model: vapiDetails?.transcriber?.model || '',
         transcriber_language: vapiDetails?.transcriber?.language || '',

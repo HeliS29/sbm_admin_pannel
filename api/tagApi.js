@@ -1,10 +1,21 @@
-const API_BASE_URL = 'https://api.interactivv.pro//vapi';
-
+const API_BASE_URL = 'http://localhost:8000/vapi';
+const getAuthHeaders = (contentType = 'application/json') => {
+  const token = localStorage.getItem('token');
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  if (contentType) {
+    headers['Content-Type'] = contentType;
+  }
+  return headers;
+};
 const tagApi = {
   // Get all tags
   getTags: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/tags`);
+      const response = await fetch(`${API_BASE_URL}/tags`, {
+        headers: getAuthHeaders(null), // No Content-Type needed for GET
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -21,7 +32,7 @@ const tagApi = {
       const response = await fetch(`${API_BASE_URL}/tags`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
         },
         body: JSON.stringify(tagData),
       });
@@ -42,7 +53,7 @@ const tagApi = {
       const response = await fetch(`${API_BASE_URL}/tags/${tagId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
         },
         body: JSON.stringify(tagData),
       });
@@ -62,6 +73,7 @@ const tagApi = {
     try {
       const response = await fetch(`${API_BASE_URL}/tags/${tagId}`, {
         method: 'DELETE',
+        headers: getAuthHeaders(null),
       });
       if (!response.ok) {
         const errorText = await response.text();

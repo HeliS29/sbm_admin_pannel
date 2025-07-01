@@ -1,6 +1,11 @@
 // src/api/knowledgeBaseApi.js
-const API_BASE_URL = 'https://api.interactivv.pro//vapi'; // Make sure this matches your backend URL
-
+const API_BASE_URL = 'http://localhost:8000/vapi'; // Make sure this matches your backend URL
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+      Authorization: `Bearer ${token}`,
+    };
+  };
 const knowledgeBaseApi = {
   /**
    * Uploads a file to create a new knowledge base for a specific assistant.
@@ -16,6 +21,7 @@ const knowledgeBaseApi = {
     try {
       const response = await fetch(`${API_BASE_URL}/knowledge_base`, {
         method: 'POST',
+        headers: getAuthHeaders(),
         body: formData, // fetch automatically sets 'Content-Type': 'multipart/form-data' with FormData
       });
 
@@ -40,7 +46,9 @@ const knowledgeBaseApi = {
    */
   getKnowledgeBases: async (assistantId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/knowledge_bases/${assistantId}`);
+        const response = await fetch(`${API_BASE_URL}/knowledge_bases/${assistantId}`, {
+            headers: getAuthHeaders(),
+          });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -65,6 +73,7 @@ const knowledgeBaseApi = {
     try {
       const response = await fetch(`${API_BASE_URL}/knowledge_base/${knowledgeBaseId}`, {
         method: 'DELETE',
+        headers: getAuthHeaders(),
       });
 
       if (!response.ok) {

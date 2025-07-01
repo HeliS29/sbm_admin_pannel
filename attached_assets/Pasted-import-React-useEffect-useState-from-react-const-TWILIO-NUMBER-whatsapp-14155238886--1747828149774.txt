@@ -8,7 +8,7 @@ const ChatPanel = () => {
   const [chatHistory, setChatHistory] = useState([]);
 
   useEffect(() => {
-    fetch("https://api.interactivv.pro//chat/api/whatsapp/users")
+    fetch("http://localhost:8000/chat/api/whatsapp/users")
       .then((res) => res.json())
       .then((data) => setUsers(data.user_numbers || []));
   }, []);
@@ -16,7 +16,7 @@ const ChatPanel = () => {
   useEffect(() => {
     if (selectedUser) {
       fetch(
-        `https://api.interactivv.pro//twilio/api/whatsapp/history?user_number=${encodeURIComponent(
+        `http://localhost:8000/twilio/api/whatsapp/history?user_number=${encodeURIComponent(
           selectedUser
         )}`
       )

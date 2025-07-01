@@ -44,7 +44,7 @@ const Sidebar = () => {
         if (!user?.id) return; // Wait until user is available
   
         try {
-          const res = await fetch(`https://api.interactivv.pro//admin/admin/${user.id}`, {
+          const res = await fetch(`http://localhost:8000/admin/admin/${user.id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           });
