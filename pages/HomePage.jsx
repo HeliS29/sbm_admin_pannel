@@ -18,7 +18,7 @@ function HomePage() {
     const token = localStorage.getItem('token');
     
     // Fetch stats
-    fetch('http://localhost:8000/chat/api/dashboard/stats', {
+    fetch('https://api.interactivv.pro/chat/api/dashboard/stats', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -37,7 +37,7 @@ function HomePage() {
       });
     
     // Fetch recent activity
-    fetch('http://localhost:8000/chat/api/dashboard/activity', {
+    fetch('https://api.interactivv.pro/chat/api/dashboard/activity', {
       headers: {
         'Authorization': `Bearer ${token}`
       }

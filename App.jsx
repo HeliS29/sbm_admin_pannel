@@ -12,6 +12,7 @@ import VapiCall from './pages/VapiCall';
 import PhoneNumber from './pages/PhoneNumber';
 import TagManager from './pages/TaxManager';
 import WidgetGenerator from './pages/WidgetGenerator';
+import CampaignForm from './pages/CampaignForm';
 
 function App() {
   const authContextValue = React.useContext(AuthContext);
@@ -30,6 +31,7 @@ function App() {
           <Route path="/phone_numbers" element={<ProtectedRoute><PhoneNumber /></ProtectedRoute>} />
           <Route path="/tags" element={<ProtectedRoute><TagManager /></ProtectedRoute>} />
           <Route path="/widget" element={<ProtectedRoute><WidgetGenerator /></ProtectedRoute>} />
+          <Route path="/outbound_campaigns" element={<ProtectedRoute><CampaignForm /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

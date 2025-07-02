@@ -10,6 +10,7 @@ import {
   LogOut,
   Pencil,
   Tags,
+  PhoneOutgoing,
   Home
 } from 'lucide-react';
 
@@ -44,7 +45,7 @@ const Sidebar = () => {
         if (!user?.id) return; // Wait until user is available
   
         try {
-          const res = await fetch(`http://localhost:8000/admin/admin/${user.id}`, {
+          const res = await fetch(`https://api.interactivv.pro/admin/admin/${user.id}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           });
@@ -138,6 +139,7 @@ const Sidebar = () => {
             <NavLink href="/assistants" icon={Bot} label="Assistant" />
             <NavLink href="/vapi_call_logs" icon={PhoneCall} label="Call Logs" />
             <NavLink href="/phone_numbers" icon={Phone} label="Phone Numbers" />
+            <NavLink href="/outbound_campaigns" icon={PhoneOutgoing} label="Outbound" />
             <NavLink href="/tags" icon={Tags} label="Tags" />
             <NavLink href="/widget" icon={Pencil} label="Widget" />
             <NavLink href="/" icon={User} label="My Profile" />

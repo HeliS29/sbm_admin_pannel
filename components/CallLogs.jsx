@@ -14,7 +14,7 @@ function CallLogs() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetch('http://localhost:8000/chat/twilio/call_logs')
+    fetch('https://api.interactivv.pro/chat/twilio/call_logs')
       .then((res) => res.json())
       .then((data) => {
         setLogs(data.calls);
