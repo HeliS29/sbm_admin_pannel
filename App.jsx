@@ -13,6 +13,8 @@ import PhoneNumber from './pages/PhoneNumber';
 import TagManager from './pages/TaxManager';
 import WidgetGenerator from './pages/WidgetGenerator';
 import CampaignForm from './pages/CampaignForm';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   const authContextValue = React.useContext(AuthContext);
@@ -22,6 +24,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/forget-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} /> 
           {/* <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} /> */}
           <Route path="/call_logs" element={<ProtectedRoute><CallLogs /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />

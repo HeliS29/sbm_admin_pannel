@@ -12,13 +12,15 @@
     "@heroicons/react": "^2.2.0",
     "@tanstack/react-query": "^5.21.1",
     "date-fns": "^4.1.0",
+    "formik": "^2.4.6",
     "lucide-react": "^0.292.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.57.0",
     "react-router-dom": "^6.30.1",
-    "wouter": "^2.11.0"
+    "wouter": "^2.11.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
