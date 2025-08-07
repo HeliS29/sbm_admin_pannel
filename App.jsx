@@ -15,6 +15,7 @@ import WidgetGenerator from './pages/WidgetGenerator';
 import CampaignForm from './pages/CampaignForm';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 
 function App() {
   const authContextValue = React.useContext(AuthContext);
@@ -26,6 +27,7 @@ function App() {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/forget-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} /> 
+          <Route path="/verify-email" element={<VerifyEmailPage />} /> 
           {/* <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} /> */}
           <Route path="/call_logs" element={<ProtectedRoute><CallLogs /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />

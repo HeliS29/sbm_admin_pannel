@@ -7,6 +7,7 @@ function AuthPage() {
   const [loginError, setLoginError] = React.useState("");
   const [registerError, setRegisterError] = React.useState("");
   const { user, login, register } = React.useContext(AuthContext);
+  const [successMessage, setSuccessMessage] = React.useState("");
 
   // Redirect if already authenticated
   React.useEffect(() => {
@@ -30,6 +31,25 @@ function AuthPage() {
     });
   };
 
+  // const handleRegister = (e) => {
+  //   e.preventDefault();
+  //   setRegisterError("");
+
+  //   const formData = new FormData(e.target);
+  //   const userData = {
+  //     full_name: formData.get("full_name"),
+  //     email: formData.get("email"),
+  //     username: formData.get("username"),
+  //     password: formData.get("password"),
+  //     organization: formData.get("organization") || undefined,
+  //     designation: formData.get("designation") || undefined,
+  //     phone: formData.get("phone") || undefined,
+  //   };
+
+  //   register(userData).catch(error => {
+  //     setRegisterError(error.message || "Email or username already registered");
+  //   });
+  // };
   const handleRegister = (e) => {
     e.preventDefault();
     setRegisterError("");
@@ -45,10 +65,20 @@ function AuthPage() {
       phone: formData.get("phone") || undefined,
     };
 
-    register(userData).catch(error => {
-      setRegisterError(error.message || "Email or username already registered");
-    });
+    register(userData)
+      .then(() => {
+        // ✅ Show success message after registration
+        setSuccessMessage("Registration successful! Please check your email to verify your account.");
+        setTimeout(() => {
+    setSuccessMessage(""); // optional: clear the message
+    setCurrentView("login");
+  }, 3000); // switch to login view
+      })
+      .catch(error => {
+        setRegisterError(error.message || "Registration failed");
+      });
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 py-12 px-4 sm:px-6 lg:px-8"> {/* Lighter blue background for the entire page */}
@@ -135,6 +165,8 @@ function AuthPage() {
           </div>
         ) : (
           <div className="space-y-8"> {/* Increased spacing */}
+          
+
             <div className="text-center">
               <h2 className="text-4xl font-extrabold text-gray-900 leading-tight">
                 Create New Account
@@ -149,7 +181,11 @@ function AuthPage() {
                 Or sign in to existing account
               </button>
             </div>
-
+            {successMessage && (
+  <div className="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg relative text-sm" role="alert">
+    {successMessage}
+  </div>
+)}
             {registerError && (
               <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg relative text-sm animate-shake" role="alert">
                 <span>{registerError}</span>

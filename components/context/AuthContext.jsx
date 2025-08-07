@@ -81,18 +81,18 @@ export function AuthProvider({ children }) {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Registration failed');
-
-      localStorage.setItem('token', data.access_token);
-
-      const userRes = await fetch('https://api.interactivv.pro/admin/me', {
-        headers: { 'Authorization': `Bearer ${data.access_token}` }
-      });
-
-      if (!userRes.ok) throw new Error('Failed to fetch user data');
-
-      const userDataRes = await userRes.json();
-      setUser(userDataRes);
       return data;
+      // localStorage.setItem('token', data.access_token);
+
+      // const userRes = await fetch('https://api.interactivv.pro/admin/me', {
+      //   headers: { 'Authorization': `Bearer ${data.access_token}` }
+      // });
+
+      // if (!userRes.ok) throw new Error('Failed to fetch user data');
+
+      // const userDataRes = await userRes.json();
+      // setUser(userDataRes);
+      // return data;
     } catch (error) {
       setAuthError(error.message);
       throw error;
