@@ -139,6 +139,7 @@ const Sidebar = () => {
           {/* Nav */}
           <nav className="px-4 py-6 space-y-2">
             <NavLink href="/chat" icon={MessageCircle} label="WhatsApp Chats" />
+            <NavLink href="/ghlChats" icon={MessageCircle} label="GHL Chats" />
             <NavLink href="/assistants" icon={Bot} label="Assistant" />
             <NavLink href="/vapi_call_logs" icon={PhoneCall} label="Call Logs" />
             <NavLink href="/phone_numbers" icon={Phone} label="Phone Numbers" />

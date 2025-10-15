@@ -16,6 +16,7 @@ import CampaignForm from './pages/CampaignForm';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmailPage from './pages/VerifyEmailPage';
+import GHLChatPage from './pages/GHLChatPage';
 
 function App() {
   const authContextValue = React.useContext(AuthContext);
@@ -39,6 +40,8 @@ function App() {
           <Route path="/widget" element={<ProtectedRoute><WidgetGenerator /></ProtectedRoute>} />
           <Route path="/outbound_campaigns" element={<ProtectedRoute><CampaignForm /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/ghlChats" element={<ProtectedRoute><GHLChatPage /></ProtectedRoute>} />
+          
         </Routes>
       </Router>
     </AuthContext.Provider>
