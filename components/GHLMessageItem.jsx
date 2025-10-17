@@ -1,10 +1,12 @@
 import React from 'react';
 import { Clock, CheckCheck } from 'lucide-react';
 
-function GHLMessageItem({ message, personalNumber }) {
-  const isOutgoing = message.from === personalNumber;
+function GHLMessageItem({ message }) {
+  // Use backend-provided direction directly
+  const isOutgoing = message.direction === 'outbound';
 
   const formatTime = (dateString) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
@@ -18,8 +20,14 @@ function GHLMessageItem({ message, personalNumber }) {
             : 'bg-white text-slate-800 border border-slate-200 rounded-bl-none'
         }`}
       >
-        {message.body && <div className="text-sm leading-relaxed mb-1">{message.body}</div>}
+        {/* message text */}
+        {message.body && (
+          <div className="text-sm leading-relaxed mb-1 break-words">
+            {message.body}
+          </div>
+        )}
 
+        {/* media attachments */}
         {message.media?.map((mediaItem, i) =>
           mediaItem.content_type?.startsWith('image/') ? (
             <div key={i} className="mt-2">
@@ -44,9 +52,12 @@ function GHLMessageItem({ message, personalNumber }) {
           )
         )}
 
-        <div className={`flex items-center justify-end mt-2 space-x-1 ${
-          isOutgoing ? 'text-green-100' : 'text-slate-400'
-        }`}>
+        {/* timestamp + status */}
+        <div
+          className={`flex items-center justify-end mt-2 space-x-1 ${
+            isOutgoing ? 'text-green-100' : 'text-slate-400'
+          }`}
+        >
           <Clock className="w-3 h-3" />
           <span className="text-xs">{formatTime(message.date_sent)}</span>
           {isOutgoing && <CheckCheck className="w-3 h-3 text-green-200" />}
